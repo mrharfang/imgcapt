@@ -22,10 +22,6 @@ share/python-wheels/
 *.egg
 PYTHON_PATH
 
-frontend/fonts/
-!frontend/fonts/.gitkeep
-
-
 # Virtual environments
 .env
 .venv
@@ -35,12 +31,6 @@ ENV/
 env.bak/
 venv.bak/
 .envrc
-
-# Keep data/raw and data/processed folder structure, but ignore all files except .gitkeep
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
 
 # IDEs
 .vscode/
@@ -58,8 +48,13 @@ data/processed/*
 ehthumbs.db
 Thumbs.db
 
-# Application data (contains user images and captions)
-data/
+# Application data - keep folder structure but ignore content
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Image and caption files (anywhere in project)
 *.png
 *.jpg
 *.jpeg
@@ -102,3 +97,15 @@ htmlcov/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+frontend/fonts/BerkeleyMono-Black-SemiCondensed-Oblique.woff2
+frontend/fonts/BerkeleyMono-Black-SemiCondensed.woff2
+frontend/fonts/BerkeleyMono-ExtraBold-SemiCondensed-Oblique.woff2
+frontend/fonts/BerkeleyMono-ExtraBold-SemiCondensed.woff2
+frontend/fonts/BerkeleyMono-Light-SemiCondensed-Oblique.woff2
+frontend/fonts/BerkeleyMono-Light-SemiCondensed.woff2
+frontend/fonts/BerkeleyMono-SemiBold-SemiCondensed-Oblique.woff2
+frontend/fonts/BerkeleyMono-SemiBold-SemiCondensed.woff2
+frontend/fonts/BerkeleyMono-SemiCondensed-Oblique.woff2
+frontend/fonts/BerkeleyMono-SemiCondensed.woff2
+frontend/fonts/BerkeleyMono-Thin-SemiCondensed-Oblique.woff2
+frontend/fonts/BerkeleyMono-Thin-SemiCondensed.woff2
