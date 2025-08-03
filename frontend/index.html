@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMGCAPT - FLUX LoRA Dataset Preparation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Left Column - 3/11 -->
+        <div class="left-column">
+            <!-- Navigation Bento -->
+            <div class="bento nav-bento">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-tab="input">INPUT</button>
+                    <button class="nav-tab" data-tab="processed">PROCESSED</button>
+                </div>
+                
+                <!-- Input Tab Content -->
+                <div class="tab-content active" id="input-tab">
+                    <div class="folder-section">
+                        <div class="section-label">INPUT SOURCE FOLDER</div>
+                        <div class="folder-path-row">
+                            <div class="folder-path" id="folder-path">No folder selected</div>
+                            <button class="action-btn secondary folder-btn" title="Browse for images">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="display:block">
+                                    <path d="M2 5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="folder-info" id="folder-info"></div>
+                    </div>
+                    <div class="files-section">
+                        <div class="files-header">
+                            <div class="section-label">RAW FILES FOR PROCESSING</div>
+                            <button class="action-btn secondary clear-all-btn" id="clear-all-btn">CLEAR ALL</button>
+                        </div>
+                        <div class="file-list" id="file-list">
+                            <!-- Files will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Processed Tab Content -->
+                <div class="tab-content" id="processed-tab">
+                    <div class="processed-stats">
+                        <span class="stat-label">Total processed:</span>
+                        <span class="stat-value" id="processed-count">0</span>
+                    </div>
+                    <div class="processed-list" id="processed-list">
+                        <!-- Processed items will be shown here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- SSE Debug Bento -->
+            <div class="bento sse-bento">
+                <div class="sse-content" id="sse-log">
+                    <!-- SSE messages will appear here -->
+                </div>
+            </div>
+
+            <!-- Branding Bento -->
+            <div class="bento brand-bento">
+                <div class="status-dots">
+                    <div class="status-dot" id="status-dot-1"></div>
+                </div>
+                <div class="brand-logo">IMGCAPT</div>
+            </div>
+        </div>
+
+        <!-- Main Area - 8/11 -->
+        <div class="main-area">
+            <!-- Image Editor Bento (INPUT TAB) -->
+            <div class="bento image-editor-bento" id="input-image-editor">
+                <div class="image-container">
+                    <div class="crop-overlay" id="crop-overlay">
+                        <canvas id="crop-canvas" width="1067" height="600"></canvas>
+                    </div>
+                    <div class="resize-handle" id="resize-handle"></div>
+                    
+                    <!-- SHIFT Constraint Indicator -->
+                    <div class="shift-indicator" id="shift-indicator">SHIFT</div>
+                    
+                    <!-- Aspect Ratio Controls -->
+                    <div class="aspect-controls">
+                        <button class="aspect-btn active" data-aspect="16:9">16:9</button>
+                        <button class="aspect-btn" data-aspect="1:1">1:1</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Processed Image Display Bento (PROCESSED TAB) -->
+            <div class="bento processed-image-bento" id="processed-image-display" style="display: none;">
+                <div class="processed-image-container">
+                    <canvas id="processed-canvas" width="800" height="600"></canvas>
+                    
+                    <!-- Navigation Controls -->
+                    <div class="processed-nav-controls">
+                        <button class="nav-arrow-btn" id="prev-processed-btn" title="Previous">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="nav-arrow-btn" id="next-processed-btn" title="Next">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Row -->
+            <div class="footer-row">
+                <!-- File Info Column - 2/8 (INPUT TAB) -->
+                <div class="file-info-column" id="input-file-info">
+                    <div class="bento file-info-bento">
+                        <div class="section-label">FILE</div>
+                        <div class="file-name" id="current-file">No file selected</div>
+                        
+                        <div class="trigger-section">
+                            <div class="section-label">INITIAL TRIGGER PHRASE</div>
+                            <textarea class="text-input trigger-input" id="trigger-input" 
+                                rows="2">an editorial photo in JWxMAG style for Jehovah's Witnesses magazine, this image shows </textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Processed Info Column - 2/8 (PROCESSED TAB) -->
+                <div class="processed-info-column" id="processed-file-info" style="display: none;">
+                    <div class="bento processed-info-bento">
+                        <div class="section-label">IMAGE SET</div>
+                        <div class="processed-info" id="processed-info">
+                            <!-- Will be populated with current/total and file names -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Caption Column - 6/8 (INPUT TAB) -->
+                <div class="caption-column" id="input-caption">
+                    <div class="bento caption-bento">
+                        <div class="section-label">CAPTION</div>
+                        <textarea class="text-input" id="caption-input" 
+                            placeholder="Enter image caption..."></textarea>
+                        
+                        <div class="action-bar">
+                            <button class="action-btn" id="generate-btn" disabled>GENERATE CAPTION</button>
+                            <button class="action-btn primary" id="process-btn" disabled>PROCESS IMAGE</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Processed Caption Column - 6/8 (PROCESSED TAB) -->
+                <div class="processed-caption-column" id="processed-caption-area" style="display: none;">
+                    <div class="bento processed-caption-bento">
+                        <div class="section-label">CAPTION (AUTO-SAVE)</div>
+                        <textarea class="text-input" id="processed-caption" 
+                            placeholder="No caption loaded..."></textarea>
+                        <div class="auto-save-indicator">
+                            <span class="save-icon">💾</span>
+                            <span class="save-text">Changes saved automatically</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="app.js?v=4"></script>
+    <script type="module" src="scripts/image-editor.js?v=4"></script>
+    <script type="module" src="scripts/sse-client.js?v=4"></script>
+</body>
+</html>
