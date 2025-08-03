@@ -24,10 +24,7 @@ PYTHON_PATH
 
 frontend/fonts/
 !frontend/fonts/.gitkeep
-data/raw
-!data/raw/.gitkeep
-data/processed
-!data/processed/.gitkeep
+
 
 # Virtual environments
 .env
@@ -38,6 +35,12 @@ ENV/
 env.bak/
 venv.bak/
 .envrc
+
+# Keep data/raw and data/processed folder structure, but ignore all files except .gitkeep
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
 
 # IDEs
 .vscode/
